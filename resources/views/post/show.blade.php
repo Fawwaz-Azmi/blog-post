@@ -5,7 +5,7 @@
                 <div class="p-6">
                     <!-- Thumbnail -->
                     @if($post->thumbnail)
-                        <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}"
+                        <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}"
                             class="w-full h-64 object-cover mb-6">
                     @else
                         <img src="{{ asset('images/default-thumbnail.png') }}" alt="Default Thumbnail"

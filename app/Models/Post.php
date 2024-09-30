@@ -46,6 +46,8 @@ class Post extends Model
      */
     public function getPublishStatusAttribute()
     {
+        // dd($this->isPublished ? 'Published' : 'Not Published');
+
         return $this->isPublished ? 'Published' : 'Not Published';
     }
 

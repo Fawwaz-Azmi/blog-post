@@ -9,6 +9,12 @@ Route::get("/", function () {
     return view("home", compact("posts"));
 });
 
+Route::get("/articles/{post}", function (\App\Models\Post $post) {
+    $posts = \App\Models\Post::orderBy("created_at","desc")->paginate(20);
+
+    return view("articles", compact("post"));
+})->name('article.show');
+
 Route::middleware([
     "auth:sanctum",
     config("jetstream.auth_session"),
