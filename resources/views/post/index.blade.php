@@ -1,20 +1,23 @@
 <x-app-layout>
-    <section class="mx-10">
-        <div class="py-16">
-            <div class="xl:container m-auto px-6 text-gray-600 md:px-12 xl:px-6">
-                <div class="flex justify-between pb-5">
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl">Post</h2>
+            </div>
+            <div>
+                <a href="{{ route('post.create') }}" class="rounded py-1.5 px-3 bg-indigo-600 text-white">Create
+                    Post</a>
+            </div>
+        </div>
+    </x-slot>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="grid gap-12 md:gap-6 md:grid-cols-2 lg:gap-12">
+                @foreach ($posts as $post)
                     <div>
-                        <h2 class="text-2xl">Post</h2>
-                    </div>
-                    <div>
-                        <a href="{{ route('post.create') }}" class="rounded py-1.5 px-3 bg-indigo-600 text-white">Create Post</a>
-                    </div>
-                </div>
-                <div class="grid gap-12 md:gap-6 md:grid-cols-2 lg:gap-12">
-                    @foreach ($posts as $post)
-                        <div>
-                            <a href="{{route('post.show', $post->id)}}"><div class="group space-y-6">
-                                <img src="{{ $post->thumbnail }}" alt="art cover" loading="lazy" width="1000" height="667"
+                        <a href="{{route('post.show', $post->id)}}">
+                            <div class="group space-y-6">
+                                <img src="{{ asset("storage/" . $post->thumbnail) }}" alt="images" loading="lazy" width="1000" height="667"
                                     class="h-80 w-full rounded-3xl object-cover object-top transition-all duration-500 group-hover:rounded-xl" />
                                 <h3 class="text-3xl font-semibold text-gray-800 dark:text-white">
                                     {{ $post->title }}
@@ -42,14 +45,12 @@
                                 </div>
                             </div>
                         </a>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="py-10">
-                    {{ $posts->links() }}
-                </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="py-10">
+                {{ $posts->links() }}
             </div>
         </div>
-
-    </section>
+    </div>
 </x-app-layout>

@@ -1,11 +1,27 @@
 <x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl">Post</h2>
+            </div>
+            <div>
+                <a href="{{ route('post.edit', $post->id) }}" class="rounded py-1.5 px-3 bg-indigo-600 text-white">Edit
+                    Post</a>
+                <form action="{{ route('post.destroy', $post->id) }}" method="POST">
+                @csrf    
+                @method('DELETE')
+                    <button class="rounded py-1.5 px-3 bg-indigo-600 text-white">Delete Post</button>
+                </form>
+            </div>
+        </div>
+    </x-slot>
     <div class="bg-gray-100">
         <div class="container mx-auto my-10">
             <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="p-6">
                     <!-- Thumbnail -->
                     @if($post->thumbnail)
-                        <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}"
+                        <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}"
                             class="w-full h-64 object-cover mb-6">
                     @else
                         <img src="{{ asset('images/default-thumbnail.png') }}" alt="Default Thumbnail"

@@ -13,7 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy("created_at", "desc")->paginate(10);
+        $posts = auth()->user()->posts()->latest()->paginate(10);
 
         return view("post.index", compact("posts"));
     }
@@ -32,9 +32,6 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
-
-        // Set default for isPublished if it's not present in the request
-        $data['isPublished'] = $request->has('isPublished') ? 1 : 0;
 
         // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
@@ -63,7 +60,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('post.edit', compact('post'));
     }
 
     /**
@@ -71,7 +68,23 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        // Mencari post yang akan diperbarui
+        $data = $request->validated();
+
+        // Jika ada thumbnail yang diupload
+        if ($request->hasFile('thumbnail')) {
+            // Menghapus thumbnail lama jika ada
+            if ($post->thumbnail) {
+                // Menghapus file lama dari storage
+                \Storage::disk('public')->delete($post->thumbnail);
+            }
+            $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+        }
+
+        $post->update($data); // Simpan perubahan ke database
+
+        // Redirect ke index dengan pesan sukses
+        return redirect()->route('post.index')->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -79,6 +92,15 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // Menghapus thumbnail jika ada
+        if ($post->thumbnail) {
+            \Storage::disk('public')->delete($post->thumbnail);
+        }
+
+        // Menghapus post dari database
+        $post->delete();
+
+        // Redirect ke index dengan pesan sukses
+        return redirect()->route('post.index')->with('success', 'Post deleted successfully.');
     }
 }
